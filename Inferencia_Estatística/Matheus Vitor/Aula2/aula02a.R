@@ -133,4 +133,23 @@ gapminder_nested %>% tidyr::unnest(data) %>% ungroup() -> gapminder_2
 View(gapminder_2)
 
 install.packages("readxl")
+library(readxl)
 
+setwd("/cloud/project/Inferencia_Estatística/Matheus Vitor/Aula2")
+mba <- read_excel("mba.xlsx", sheet ="dados")
+View(mba)
+
+mean(mba$salario)
+median(mba$salario)
+hist(mba$salario)
+
+filter (mba, salario >= 0) -> mba2
+
+mean(mba2$salario)
+median(mba2$salario)
+hist(mba2$salario)
+
+filter (mba, salario > 0) -> mba3
+mean(mba3$salario)
+median(mba3$salario)
+hist(mba3$salario)
