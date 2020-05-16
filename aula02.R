@@ -15,6 +15,8 @@ library(data.table)
 library(readxl)
 library(readxls)
 
+getwd()
+
 help(spread)
 
 view(gapminder)
@@ -129,4 +131,6 @@ apply(gapminder_nested, 1, function(df){
 gapminder_nested %>% tidyr::unnest(data) %>% ungroup() -> gapminder_2
 
 View(gapminder_2)
+
+install.packages("readxl")
 
