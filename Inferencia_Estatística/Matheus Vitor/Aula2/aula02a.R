@@ -153,3 +153,99 @@ filter (mba, salario > 0) -> mba3
 mean(mba3$salario)
 median(mba3$salario)
 hist(mba3$salario)
+
+mba3$sexo %>% unique()
+
+#Gráfico ideal para observar a influência de uma variável categórica em uma variável contínua : Boxplot
+
+boxplot(mba3$salario ~mba3$sexo)
+
+#Criacao de um modelo linear baseado em uma variavel categórica sexo
+# O modelo será do tipo: Salário Previsto =  b0 + b1*sexo , Onde sexo Feminino = 0 e sexo Masculino = 1
+
+lm(data = mba3 , formula = salario ~ sexo) -> modelo1
+
+summary(modelo1)
+# Sal^ 98524 + 6447*(sexo)
+
+#Nesta análise a qual segue o padrão clássico da estatística vamos trabalhar como critério para escolha das variáveis o p-value
+
+#Vamos remover o outlier feminino que pode estar distorcendo o valor
+
+View(mba3)
+
+mba3 %>% filter(salario < max(mba3$salario)) -> mba4
+lm(data = mba4 , formula = salario ~ sexo) -> modelo1
+
+boxplot(mba4$salario ~mba4$sexo)
+summary(modelo1)
+
+#Criando explicitamente a variável categórica
+mutate(mba4, codSexo = (sexo == "Masculino")*1) -> mba5
+View(mba5)
+
+#Criando um modelo para a variável categórica transformada ou variável dumificada, ou variável dummy
+lm(data = mba5, formula = salario ~ codSexo) -> modelo3
+summary(modelo3)
+
+#Influência da variável desempenho
+boxplot(mba5$salario ~mba4$desempenho)
+
+#Criando o modelo diretamente no R
+lm(data = mba5, formula = salario ~ desempenho) -> modelo4
+summary(modelo4)
+# sal^ = 103612 + 2717*Excelente - 8017*Fraco - 5293*Regular
+#Como pode ser visto o esquema de valores escolhidos para a variável categórica desempenho não é o ideal.
+#O ideal seria o seguinte :
+#   Regular          Bom           Excelente
+#         0            0                   0 -> Fraco
+#         1            0                   0 -> Regular
+#         0            1                   0 -> Bom
+#         0            0                   1 -> Excelente
+
+#Criação de um sistema de dummies com esta sequencia, mas os valores númericos ainda não se apresentam de forma correta
+#pois aparece que a relação entre as variáveis é igual.
+
+match(mba5$desempenho, c("Fraco", "Regular", "Bom", "Excelente")) -> mba5$desempenho_num
+lm(data = mba5, formula = salario ~ desempenho_num) -> modelo5
+summary(modelo5)
+#Sal^ 91570 + 3744*desempenho_num
+
+
+#O Formato ideal de transformação de uma variável categórica de varios níveis envolve a criação de r-1
+#de variáveis dummy para cada categoria de variável de entrada, sendo 0 atribuida a todas as dummys para formar o caso base.
+
+mutate(mba5, 
+       codExcelente = (desempenho == "Excelente")*1,
+       codBom =(desempenho == "Bom")*1,
+       codRegular =(desempenho == "Regular")*1,
+       ) -> mba6
+
+View(mba6)
+lm(data = mba6, formula = salario ~ codRegular + codBom + codExcelente) -> modelo6
+summary(modelo6)
+
+#Analisar o efeito de Experiência
+lm(data = mba6, formula = salario ~ experiencia) -> modelo7
+summary(modelo7)
+
+#Analisar o efeito da idade
+lm(data = mba6, formula = salario ~ idade) -> modelo8
+summary(modelo8)
+
+#Analisar o efeito combinado de experiência mais idade
+lm(data = mba6, formula = salario ~experiencia + idade ) -> modelo9
+summary(modelo9)
+
+#Multicolinearidade (escolher uma variável das duas)
+cor(mba6$experiencia, mba6$idade)
+
+#Como exercício a montagem de modelos com as demais variáveis numéricas (desempenho).
+#Nenhuma será significativa.
+
+lm(data = mba6, formula = salario ~ sexo + experiencia + codExcelente) -> modelo10
+summary(modelo10)
+#sal^ = 89037 + 10027*sexoMasculino + 994*Experiência + 6468*CodExcelente
+
+
+
