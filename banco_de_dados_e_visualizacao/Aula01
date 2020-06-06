@@ -1,0 +1,137 @@
+/*Criação de Tabelas
+CREATE TABLE cliente(
+cod_cliente NUMBER(3) PRIMARY KEY,
+nome VARCHAR(20),
+dt_nascimento DATE,
+endereco VARCHAR(60));
+
+CREATE TABLE loja(
+cod_loja NUMBER(3) PRIMARY KEY,
+nome_loja VARCHAR2(30),
+tamanho NUMBER(8,2),
+endereco VARCHAR2(60));
+
+CREATE TABLE nota_fiscal(
+cod_nf NUMBER(3) PRIMARY KEY,
+cod_cliente NUMBER(3) REFERENCES cliente(cod_cliente),
+cod_loja NUMBER (3) REFERENCES loja(cod_loja),
+data_nf DATE
+);
+
+
+/*Alterar tabela*/
+ALTER TABLE cliente
+MODIFY nome NOT NULL;
+
+ALTER TABLE cliente
+ADD telefone VARCHAR2(30);
+
+ALTER TABLE cliente
+MODIFY nome CHAR(15);
+
+/*Criando uma tabela aleatória*/
+CREATE TABLE tbl_exemplo(
+valor1 NUMBER(3) CHECK (valor1 > 10),
+valor2 NUMBER(3) CHECK (valor2 IN (5,7,159,333)),
+valor3 CHAR(1)  CHECK (valor3 IN('f', 'm' ,'M','F'))
+);
+
+/*Inserindo dados na tabela*/
+INSERT INTO cliente(cod_cliente, nome, dt_nascimento, endereco) 
+VALUES(123,'Matheus Vitor', to_date('1990/04/09', 'YYYY/MM/DD'), 'Ernesto nazareth, 50');
+
+/*Inserindo dados na tabela*/
+INSERT INTO cliente(cod_cliente, nome, dt_nascimento, endereco) 
+VALUES(124,'Thiago Alvares', to_date('1992/02/11', 'YYYY/MM/DD'), 'Avenida Paulista, 50');
+
+/*Inserindo dados na tabela*/
+INSERT INTO cliente(cod_cliente, nome, dt_nascimento) 
+VALUES(125,'Thiago Carvalho', to_date('1984/10/22', 'YYYY/MM/DD'));
+
+ALTER TABLE cliente
+MODIFY nome VARCHAR(60);
+
+/*Inserindo dados na tabela*/
+INSERT INTO cliente(cod_cliente, nome, dt_nascimento,endereco) 
+VALUES(126,'Samara Almeida Araujo', to_date('1991/09/11', 'YYYY/MM/DD'), 'Avenia Faria Lima ,222');
+
+/*Inserindo dados na tabela*/
+INSERT INTO cliente(cod_cliente, nome, dt_nascimento,endereco) 
+VALUES(127,'Matheus Vinicius Felipe Vitor', to_date('1990/09/11', 'YYYY/MM/DD'), 'Avenia Faria Lima ,222');
+
+SELECT * FROM  cliente
+
+UPDATE cliente
+SET nome = 'Matheus Vinicius Felipe Vitor'
+WHERE cod_cliente = 124;
+
+SELECT * FROM  cliente
+
+UPDATE cliente
+SET endereco = 'Av. Augusta, 325', nome = 'THIAGO CARVALHO'
+WHERE cod_cliente = 125;
+
+SELECT * FROM  cliente
+
+DELETE FROM cliente
+WHERE cod_cliente = 127
+
+SELECT * FROM  cliente
+
+INSERT INTO loja (cod_loja, nome_loja)
+VALUES(12, 'Aclimacao');
+
+INSERT INTO loja (cod_loja, nome_loja)
+VALUES(13, 'Paulista');
+
+INSERT INTO loja (cod_loja, nome_loja)
+VALUES(14, 'Iguatemi');
+
+INSERT INTO loja (cod_loja, nome_loja)
+VALUES(15, 'Faria Lima');
+
+INSERT INTO nota_fiscal(cod_nf, cod_loja, cod_cliente, data_nf)
+VALUES(555,12,125,SYSDATE)
+
+INSERT INTO nota_fiscal(cod_nf, cod_loja, cod_cliente, data_nf)
+VALUES(444,13,126,SYSDATE)
+
+INSERT INTO nota_fiscal(cod_nf, cod_loja, cod_cliente, data_nf)
+VALUES(777,15,123,SYSDATE)
+
+INSERT INTO nota_fiscal(cod_nf, cod_loja, cod_cliente, data_nf)
+VALUES(999,15,124,SYSDATE)
+
+SELECT * FROM nota_fiscal
+
+CREATE TABLE cliente(
+cod_cliente NUMBER(3) PRIMARY KEY,
+nome VARCHAR(20),
+dt_nascimento DATE,
+endereco VARCHAR(60));
+
+CREATE TABLE departamento(
+dptono NUMBER(2) PRIMARY KEY,
+dname VARCHAR(14),
+loc VARCHAR(13)
+);
+
+
+/*Atividade 2 */
+CREATE TABLE funcionarios(
+empno NUMBER(4) PRIMARY KEY,
+ename VARCHAR(10) NOT NULL, 
+job VARCHAR(9) NOT NULL, 
+mgr NUMBER(4),
+hiredate DATE,
+sal NUMBER(7,2),
+dptono NUMBER(2) REFERENCES departamento(dptono),
+comm NUMBER(7,2)
+);
+
+CREATE TABLE nota_fiscal(
+cod_nf NUMBER(3) PRIMARY KEY,
+cod_cliente NUMBER(3) REFERENCES cliente(cod_cliente),
+cod_loja NUMBER (3) REFERENCES loja(cod_loja),
+data_nf DATE
+);
